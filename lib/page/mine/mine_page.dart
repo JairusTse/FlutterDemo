@@ -1,15 +1,6 @@
 import 'dart:io';
 
-/**
- * Copyright (c) 2018. 广州一企问信息科技有限公司 Inc. All rights reserved.
- * 作者：Created by WZS on 2019/8/8.
- * 联系方式：318805636@qq.com
- * 功能描述：
- * 修改：无
- */
 import 'package:flutter/material.dart';
-
-import '../splash_page.dart';
 
 class MinePage extends StatefulWidget {
 

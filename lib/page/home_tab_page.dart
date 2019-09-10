@@ -11,17 +11,14 @@ class HomeTabPage extends StatefulWidget {
 }
 
 class HomeTabPageState extends State<HomeTabPage> {
-
   int _tabIndex = 0;
   final List<Image> _tabImages = [
     Image.asset('assets/images/icon_tab_home_normal.png',
         width: 25, height: 25),
-    Image.asset('assets/images/icon_tab_home_press.png',
-        width: 25, height: 25),
+    Image.asset('assets/images/icon_tab_home_press.png', width: 25, height: 25),
     Image.asset('assets/images/icon_tab_mine_normal.png',
         width: 25, height: 25),
-    Image.asset('assets/images/icon_tab_mine_press.png',
-        width: 25, height: 25),
+    Image.asset('assets/images/icon_tab_mine_press.png', width: 25, height: 25),
   ];
 
   @override
