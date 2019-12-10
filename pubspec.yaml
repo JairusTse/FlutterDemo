@@ -28,6 +28,9 @@ dependencies:
   # Toast
   fluttertoast: ^3.1.3
 
+  bottom_tab_bar:
+    git: https://github.com/LiuC520/flutter_bottom_tab_bar.git
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
