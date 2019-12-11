@@ -8,19 +8,26 @@ import 'package:flutter_framework/constants/constants.dart';
 /// HTTP请求工具类
 class Http {
 
-  /// 公开同步单例访问点
-  factory Http() => _sharedInstance();
+  /// 公开单例访问点
+  factory Http({bool hasTimeout = true}) => _sharedInstance(hasTimeout);
 
   /// 公开静态单例访问点
-  static get instance => _sharedInstance();
+  static Http get instance => Http();
 
   /// 私有静态实例成员,未初始化
   static Http _instance;
 
   /// 同步/静态单例访问点
-  static Http _sharedInstance() {
+  static Http _sharedInstance(bool hasTimeout) {
     if (_instance == null) {
       _instance = Http._();
+    }
+    if (hasTimeout) {
+      // 15秒超时
+      _instance.dio.options.receiveTimeout = 15000;
+    } else {
+      // 不设超时也不能为无限,设为3分钟
+      _instance.dio.options.receiveTimeout = Duration(minutes:3).inMilliseconds;
     }
     return _instance;
   }
@@ -33,7 +40,6 @@ class Http {
     dio = new Dio(BaseOptions(
       method: "POST",
       connectTimeout: 5000,
-      receiveTimeout: 15000,
       contentType: ContentType.json,
       responseType: ResponseType.json,
     ));
@@ -51,7 +57,7 @@ class Http {
       // 或返回`dio.reject(errMsg)`,这样请求将被中止并触发异常,上层catchError会被调用.
       onRequest: (RequestOptions options) {
         print("\n================== 请求数据 ==========================");
-        print("url = ${options.uri.toString()}");
+        print("method = ${options.method} url = ${options.uri}");
         print("headers = ${options.headers}");
         print("params = ${options.data}");
         print("\n=====================================================");
@@ -61,7 +67,8 @@ class Http {
       // 返回响应数据之前
       onResponse: (Response response) {
         print("\n================== 响应数据 ==========================");
-        print("code = ${response.statusCode}");
+        print("method = ${response.request.method} host = ${response.request.uri}");
+        print("HTTP response code = ${response.statusCode}");
         print("data = ${response.data}");
         print("\n=====================================================");
         return response; // continue
@@ -108,6 +115,34 @@ class Http {
       //网络异常
       onError(Constants.codeNetError, e.toString());
       return null;
+    }
+  }
+
+  /// 下载文件
+  Future<bool> downloadFile({
+    @required String url,
+    @required String path,
+    @required onProgress(int count, int total),
+    @required onError(int code, String message)
+  }) async {
+    try {
+      // 必须加上 否则download 报 can not open file
+      File file = new File(path);
+      file.create(recursive: true);
+
+      print("=== 开始下载 ===");
+      print(url);
+
+      await dio.download(url, path, onReceiveProgress: (int count, int total) {
+        //进度
+        print("$count $total");
+        onProgress(count, total);
+      });
+      print('--------- downloadFile success ---------');
+      return true;
+    } catch (e) {
+      onError(Constants.codeNetError, e.toString());
+      return false;
     }
   }
 }

@@ -1,4 +1,9 @@
 
+import 'dart:io';
+
+import 'package:flutter_framework/util/string_util.dart';
+import 'package:path_provider/path_provider.dart';
+
 /// 常量
 class Constants {
 
@@ -8,4 +13,22 @@ class Constants {
     static int codeSucceed = 0000;
     ///网络异常code
     static int codeNetError = -1;
+
+    static String _externalDocumentsDirectory; //存储目录
+
+    static Future<String> requestExternalStorageDirectory() async {
+        if (StringUtil.isEmpay(_externalDocumentsDirectory)) {
+            Directory externalDir;
+            if (Platform.isAndroid) {
+                //android系统返回外部存储目录
+                externalDir = await getExternalStorageDirectory();
+            } else {
+                //ios系统返回文档目录
+                externalDir = await getApplicationDocumentsDirectory();
+            }
+            _externalDocumentsDirectory = externalDir.path;
+        }
+
+        return _externalDocumentsDirectory;
+    }
 }

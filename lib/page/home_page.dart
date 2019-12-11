@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_framework/constants/constants.dart';
 import 'package:flutter_framework/util/request.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:package_info/package_info.dart';
 
 // 应用页面使用有状态Widget
 class HomePage extends StatefulWidget {
@@ -9,6 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
